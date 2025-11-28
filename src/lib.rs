@@ -43,6 +43,8 @@
 pub mod config;
 pub mod backend;
 pub mod app;
+pub mod frontend;
 
 pub use config::HarborConfig;
 pub use app::HarborApp;
+pub use frontend::{BrowserLauncher, BrowserProcess, BrowserType, WindowConfig};

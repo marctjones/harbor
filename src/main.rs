@@ -11,8 +11,8 @@
 
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
-use harbor::{HarborApp, HarborConfig};
-use log::info;
+use harbor::{BrowserLauncher, BrowserType, HarborApp, HarborConfig, WindowConfig};
+use log::{info, warn};
 use std::path::PathBuf;
 
 #[derive(Parser)]
@@ -40,6 +40,14 @@ struct Cli {
     /// Print the URL and exit (for integration with other tools)
     #[arg(long)]
     print_url: bool,
+
+    /// Path to browser executable (overrides HARBOR_BROWSER and auto-detection)
+    #[arg(long, value_name = "PATH")]
+    browser: Option<PathBuf>,
+
+    /// Don't use system browser as fallback if Servo isn't found
+    #[arg(long)]
+    no_fallback: bool,
 
     #[command(subcommand)]
     command: Option<Commands>,
@@ -123,22 +131,92 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    // For now, print instructions for running with servo
-    // In the future, this will launch the Servo window directly
-    println!();
-    println!("=== Harbor App Ready ===");
-    println!("App:    {}", run_config.title);
-    println!("URL:    {}", run_config.url);
-    println!("Socket: {}", app.socket_path());
-    println!("Size:   {}x{}", run_config.width, run_config.height);
-    println!();
-    println!("Backend is running. To view the app:");
-    println!("  1. Use curl to test: curl --unix-socket {} http://localhost/", app.socket_path());
-    println!("  2. Or integrate with Servo when available");
-    println!();
-    println!("Press Ctrl+C to stop the backend.");
+    // Create window configuration for the browser
+    let window_config = WindowConfig {
+        url: run_config.url.clone(),
+        title: run_config.title.clone(),
+        width: run_config.width,
+        height: run_config.height,
+        resizable: run_config.resizable,
+        decorated: run_config.decorated,
+        fullscreen: run_config.fullscreen,
+        devtools: run_config.devtools,
+    };
 
-    wait_for_interrupt();
+    // Set up browser launcher
+    let mut launcher = BrowserLauncher::new();
+    if let Some(browser_path) = cli.browser {
+        launcher = launcher.with_browser(browser_path);
+    }
+    if cli.no_fallback {
+        launcher = launcher.no_fallback();
+    }
+
+    // Try to find and launch browser
+    match launcher.find_browser() {
+        Ok(browser_type) => {
+            match &browser_type {
+                BrowserType::Servoshell(path) => {
+                    info!("Using servoshell: {}", path.display());
+                }
+                BrowserType::Custom(path) => {
+                    info!("Using custom browser: {}", path.display());
+                }
+                BrowserType::SystemBrowser => {
+                    warn!("Using system browser - transport URLs may not work!");
+                    warn!("Install servoshell or set HARBOR_BROWSER for full functionality.");
+                }
+            }
+
+            // Launch the browser
+            let mut browser = launcher.launch(&window_config)
+                .with_context(|| "Failed to launch browser")?;
+
+            info!("Browser launched, waiting for exit...");
+            info!("Press Ctrl+C to stop the app.");
+
+            // Set up Ctrl+C handler
+            let running = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(true));
+            let r = running.clone();
+            ctrlc::set_handler(move || {
+                r.store(false, std::sync::atomic::Ordering::SeqCst);
+            }).expect("Error setting Ctrl-C handler");
+
+            // Wait for browser to exit or Ctrl+C
+            while running.load(std::sync::atomic::Ordering::SeqCst) && browser.is_running() {
+                std::thread::sleep(std::time::Duration::from_millis(100));
+
+                // Check and restart backend if needed
+                if let Err(e) = app.check_backend() {
+                    warn!("Backend check failed: {}", e);
+                }
+            }
+
+            // Clean shutdown
+            if browser.is_running() {
+                info!("Stopping browser...");
+                let _ = browser.kill();
+            }
+        }
+        Err(e) => {
+            // No browser found - fall back to manual instructions
+            warn!("Could not find browser: {}", e);
+            println!();
+            println!("=== Harbor App Ready ===");
+            println!("App:    {}", run_config.title);
+            println!("URL:    {}", run_config.url);
+            println!("Socket: {}", app.socket_path());
+            println!("Size:   {}x{}", run_config.width, run_config.height);
+            println!();
+            println!("No browser found. To view the app:");
+            println!("  1. Install servoshell and add to PATH");
+            println!("  2. Set HARBOR_BROWSER=/path/to/browser");
+            println!("  3. Or use: curl --unix-socket {} http://localhost/", app.socket_path());
+            println!();
+            println!("Press Ctrl+C to stop the backend.");
+            wait_for_interrupt();
+        }
+    }
 
     info!("Shutting down...");
     Ok(())
