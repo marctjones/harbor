@@ -18,9 +18,12 @@ name = "harbor"
 path = "src/lib.rs"
 
 [features]
-default = ["unix"]
+default = ["unix", "servo"]
 unix = []
 named-pipe = []
+# Enable embedded Servo browser engine
+# Disable with: cargo build --no-default-features --features unix
+servo = []
 
 [dependencies]
 # Browser embedding (modified Servo with Rigging transport patches)

@@ -43,8 +43,9 @@
 pub mod config;
 pub mod backend;
 pub mod app;
-pub mod frontend;
+pub mod servo_api;
+
 
 pub use config::HarborConfig;
 pub use app::HarborApp;
-pub use frontend::{BrowserLauncher, BrowserProcess, BrowserType, WindowConfig};
+pub use servo_api::{BrowserConfig, BrowserError, BrowserEvent, run_browser, is_browser_available};
