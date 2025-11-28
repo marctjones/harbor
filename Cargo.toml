@@ -15,6 +15,10 @@ unix = []
 named-pipe = []
 
 [dependencies]
+# Browser embedding (modified Servo with transport layer support)
+# Uncomment when integrating with Servo servoapp:
+# servo = { git = "https://github.com/marctjones/servo", branch = "transport-layer" }
+
 # Transport library
 rigging = { git = "https://github.com/marctjones/rigging", default-features = false, features = ["unix"] }
 
