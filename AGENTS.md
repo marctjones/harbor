@@ -235,25 +235,45 @@ pub enum BackendError {
 }
 ```
 
-## Integration with Servo
+## Integration with Rigging
 
-Harbor returns a `HarborRunConfig` that provides all information needed to create a Servo window:
+Harbor uses **Rigging** for browser embedding. Rigging provides a stable API that isolates Harbor from Servo's internal APIs.
+
+### Browser Types from Rigging
 
 ```rust
-pub struct HarborRunConfig {
-    pub url: String,        // Transport-aware URL
-    pub title: String,      // Window title
-    pub width: u32,
-    pub height: u32,
-    pub resizable: bool,
-    pub decorated: bool,
-    pub fullscreen: bool,
-    pub devtools: bool,
-}
+// Re-exported from rigging::embed
+pub use rigging::embed::{
+    BrowserBuilder,      // Builder for browser instances
+    BrowserConfig,       // Configuration struct
+    BrowserEvent,        // Events during operation
+    EmbedError,          // Error type (as BrowserError)
+};
+
+// Convenience function
+pub fn run_browser(config: BrowserConfig, callback: Option<...>) -> Result<(), BrowserError>;
 ```
+
+### Harbor's Role
+
+1. **Configuration**: Parse `app.toml` into `HarborConfig`
+2. **Backend Management**: Start/stop/monitor backend process
+3. **Frontend Launch**: Create `BrowserConfig` and call Rigging's API
+
+### Flow
+
+```
+app.toml → HarborConfig → BackendManager.start()
+                       → HarborRunConfig → BrowserConfig → Rigging → Servo
+```
+
+### Key Point
+
+**DO NOT** import Servo types directly. Always use Rigging's stable API. When Servo is upgraded, only Rigging's `backend.rs` needs changes.
 
 ## Related Projects
 
-- [Rigging](https://github.com/marctjones/rigging) - Transport library
+- [Rigging](https://github.com/marctjones/rigging) - Servo embedding API and transport library
 - [Compass](https://github.com/marctjones/compass) - Privacy browser
-- [Servo](https://github.com/servo/servo) - Browser engine
+- [Corsair](https://github.com/marctjones/corsair) - Tor daemon
+- [Servo](https://github.com/servo/servo) - Browser engine (via Rigging)

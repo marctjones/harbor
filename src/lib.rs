@@ -43,9 +43,40 @@
 pub mod config;
 pub mod backend;
 pub mod app;
-pub mod servo_api;
-
 
 pub use config::HarborConfig;
 pub use app::HarborApp;
-pub use servo_api::{BrowserConfig, BrowserError, BrowserEvent, run_browser, is_browser_available};
+
+// Re-export browser types from Rigging's stable embedding API
+// This provides a consistent interface and isolates Harbor from Servo internals
+pub use rigging::embed::{
+    BrowserBuilder,
+    BrowserConfig,
+    BrowserEvent,
+    EmbedError as BrowserError,
+};
+
+/// Run the browser with the given configuration
+///
+/// This is a convenience wrapper around Rigging's BrowserBuilder.
+pub fn run_browser(
+    config: BrowserConfig,
+    event_callback: Option<Box<dyn Fn(BrowserEvent) + Send + 'static>>,
+) -> Result<(), BrowserError> {
+    let mut builder = BrowserBuilder::new().config(config);
+
+    if let Some(callback) = event_callback {
+        builder = builder.on_event(callback);
+    }
+
+    builder.run()
+}
+
+/// Check if browser support is available
+///
+/// Returns true if Servo browser engine is available.
+pub fn is_browser_available() -> bool {
+    // For now, check if the servo feature is enabled
+    // When Rigging properly integrates Servo, this will delegate to Rigging
+    cfg!(feature = "servo")
+}

@@ -206,8 +206,17 @@ Harbor's architecture provides inherent security:
 
 Mozilla Public License 2.0 (MPL-2.0)
 
+## Dependencies
+
+Harbor uses **Rigging** for browser embedding and transport support. Rigging provides:
+- Stable API for embedding the Servo browser engine
+- Transport-aware URL parsing
+- Unix socket and other transport support
+
+See [Rigging](https://github.com/marctjones/rigging) for more details.
+
 ## Related Projects
 
+- [Rigging](https://github.com/marctjones/rigging) - Servo embedding API and transport library
 - [Compass](https://github.com/marctjones/compass) - Privacy-focused browser
 - [Corsair](https://github.com/marctjones/corsair) - Tor daemon
-- [Rigging](https://github.com/marctjones/rigging) - Transport library

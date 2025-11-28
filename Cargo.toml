@@ -26,12 +26,9 @@ named-pipe = []
 servo = []
 
 [dependencies]
-# Browser embedding (modified Servo with Rigging transport patches)
-# Uncomment when integrating with Servo servoapp:
-# servo = { git = "https://github.com/marctjones/servo", branch = "transport-layer" }
-
-# Note: Transport layer is provided by the patched Servo (Rigging patches).
-# No separate rigging dependency needed - use Servo's net::transport_url module.
+# Rigging provides the stable embedding API for Servo
+# When the 'servo' feature is enabled, Rigging includes the browser engine
+rigging = { path = "../rigging", features = ["unix", "tcp"] }
 
 # Configuration
 toml = "0.8"
