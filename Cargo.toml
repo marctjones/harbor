@@ -9,6 +9,14 @@ repository = "https://github.com/marctjones/harbor"
 keywords = ["servo", "desktop-app", "unix-socket", "named-pipe", "gunicorn", "nginx"]
 categories = ["gui", "web-programming"]
 
+[[bin]]
+name = "harbor"
+path = "src/main.rs"
+
+[lib]
+name = "harbor"
+path = "src/lib.rs"
+
 [features]
 default = ["unix"]
 unix = []
@@ -36,6 +44,12 @@ env_logger = "0.11"
 # Error handling
 thiserror = "1.0"
 anyhow = "1.0"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# Signal handling
+ctrlc = "3.4"
 
 # Process management
 [target.'cfg(unix)'.dependencies]

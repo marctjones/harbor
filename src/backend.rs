@@ -86,7 +86,7 @@ impl BackendManager {
     }
 
     /// Wait for the backend socket to be ready
-    fn wait_for_socket(&self) -> Result<(), BackendError> {
+    fn wait_for_socket(&mut self) -> Result<(), BackendError> {
         let socket_path = Path::new(&self.config.socket);
         let start = Instant::now();
         let timeout = Duration::from_secs(self.config.startup_timeout);
@@ -110,7 +110,7 @@ impl BackendManager {
             }
 
             // Check if process is still running
-            if let Some(ref mut child) = self.process.as_mut() {
+            if let Some(ref mut child) = self.process {
                 if let Ok(Some(status)) = child.try_wait() {
                     return Err(BackendError::Crashed(format!(
                         "Backend exited with status: {}",

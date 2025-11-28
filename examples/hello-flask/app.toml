@@ -1,0 +1,38 @@
+# Harbor Example: Hello Flask
+# A simple Flask application demonstrating Harbor basics
+#
+# To run:
+#   harbor examples/hello-flask/app.toml
+#
+# Or from this directory:
+#   harbor app.toml
+
+[app]
+name = "Hello Flask"
+version = "1.0.0"
+description = "Simple Flask example demonstrating Harbor"
+
+[backend]
+command = "python"
+args = ["app.py"]
+socket = "/tmp/hello-harbor.sock"
+workdir = "examples/hello-flask"
+startup_timeout = 10
+restart_on_crash = true
+
+[backend.env]
+FLASK_ENV = "development"
+PYTHONUNBUFFERED = "1"
+HARBOR_SOCKET = "/tmp/hello-harbor.sock"
+
+[frontend]
+url = "http::unix///tmp/hello-harbor.sock/"
+width = 900
+height = 700
+title = "Hello Harbor!"
+resizable = true
+decorated = true
+
+[settings]
+devtools = false
+log_level = "info"
