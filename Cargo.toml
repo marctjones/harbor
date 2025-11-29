@@ -27,8 +27,9 @@ servo = []
 
 [dependencies]
 # Rigging provides the stable embedding API for Servo
-# When the 'servo' feature is enabled, Rigging includes the browser engine
-rigging = { path = "../rigging", features = ["unix", "tcp"] }
+# Harbor uses ONLY Unix sockets - NO TCP networking allowed
+# This ensures Harbor apps cannot access the internet
+rigging = { path = "../rigging", default-features = false, features = ["unix", "servo"] }
 
 # Configuration
 toml = "0.8"

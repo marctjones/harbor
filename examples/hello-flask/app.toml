@@ -13,8 +13,9 @@ version = "1.0.0"
 description = "Simple Flask example demonstrating Harbor"
 
 [backend]
-command = "python"
-args = ["app.py"]
+# Use gunicorn for Unix socket support (Flask's built-in server doesn't support UDS)
+command = "gunicorn"
+args = ["--bind", "unix:/tmp/hello-harbor.sock", "app:app"]
 socket = "/tmp/hello-harbor.sock"
 workdir = "examples/hello-flask"
 startup_timeout = 10

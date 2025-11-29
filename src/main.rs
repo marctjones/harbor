@@ -288,6 +288,8 @@ fn check_config(config_path: &PathBuf) -> Result<()> {
 fn get_example_config(name: &str) -> Result<HarborConfig> {
     match name {
         "hello-flask" => {
+            // Use gunicorn with the app.py from examples directory
+            // Requires: pip install flask gunicorn
             let toml = r#"
 [app]
 name = "Hello Flask"
@@ -295,57 +297,10 @@ version = "1.0.0"
 description = "Simple Flask example for Harbor"
 
 [backend]
-command = "python"
-args = ["-c", """
-from flask import Flask
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return '''
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hello Harbor!</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-        }
-        h1 { font-size: 3rem; margin-bottom: 0.5rem; }
-        p { font-size: 1.2rem; opacity: 0.9; }
-        .emoji { font-size: 4rem; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="emoji">⚓</div>
-        <h1>Hello, Harbor!</h1>
-        <p>Your Flask app is running over Unix Domain Socket</p>
-        <p><small>Socket: /tmp/hello-harbor.sock</small></p>
-    </div>
-</body>
-</html>
-'''
-
-if __name__ == '__main__':
-    import os
-    sock = '/tmp/hello-harbor.sock'
-    if os.path.exists(sock):
-        os.remove(sock)
-    app.run(host=f'unix://{sock}')
-"""]
+command = "gunicorn"
+args = ["--bind", "unix:/tmp/hello-harbor.sock", "app:app"]
 socket = "/tmp/hello-harbor.sock"
+workdir = "examples/hello-flask"
 
 [backend.env]
 FLASK_ENV = "development"

@@ -62,7 +62,18 @@ impl BackendManager {
             cmd.current_dir(workdir);
         }
 
-        // Set environment variables
+        // Ensure PATH includes common locations for user-installed tools
+        // This allows finding gunicorn, uvicorn, etc. installed via pip --user
+        if let Ok(current_path) = std::env::var("PATH") {
+            if let Some(home) = std::env::var("HOME").ok() {
+                let local_bin = format!("{}/.local/bin", home);
+                if !current_path.contains(&local_bin) {
+                    cmd.env("PATH", format!("{}:{}", local_bin, current_path));
+                }
+            }
+        }
+
+        // Set environment variables from config
         for (key, value) in &self.config.env {
             cmd.env(key, value);
         }
