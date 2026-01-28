@@ -1,1 +1,4 @@
 target/
+
+# Rigging is a symlink to ../rigging/ (separate git repo)
+rigging/
