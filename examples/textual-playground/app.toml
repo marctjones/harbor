@@ -1,0 +1,24 @@
+# Harbor configuration for Textual Playground
+# This is a toy application for testing TUI-to-GUI rendering
+
+[app]
+name = "Textual Playground"
+version = "0.1.0"
+description = "A toy Textual app for testing Harbor's TUI-to-GUI rendering"
+
+[backend]
+command = "python3"
+args = ["playground.py"]
+socket = "/tmp/textual-playground.sock"
+startup_timeout = 10
+
+[frontend]
+url = "http::unix///tmp/textual-playground.sock/"
+width = 1000
+height = 800
+title = "Textual Playground - Harbor TUI→GUI Renderer"
+resizable = true
+
+[settings]
+devtools = false
+log_level = "info"
