@@ -541,7 +541,7 @@ name = "base"
 version = "0.0.1"
 dependencies = [
  "crossbeam-channel",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "libc",
  "log",
  "mach2 0.6.0",
@@ -1219,7 +1219,7 @@ dependencies = [
  "euclid",
  "fonts",
  "gaol",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "keyboard-types 0.8.3",
  "layout_api",
  "log",
@@ -1261,7 +1261,7 @@ dependencies = [
  "fonts_traits",
  "http 1.4.0",
  "hyper_serde",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "log",
  "malloc_size_of_derive",
  "net_traits",
@@ -3329,6 +3329,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc0fef456e4baa96da950455cd02c081ca953b141298e41db3fc7e36b1da849c"
 
 [[package]]
+name = "hex"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
+
+[[package]]
 name = "hexf-parse"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3497,6 +3503,7 @@ dependencies = [
  "http 1.4.0",
  "http-body 1.0.1",
  "httparse",
+ "httpdate",
  "itoa",
  "pin-project-lite",
  "pin-utils",
@@ -3558,6 +3565,21 @@ dependencies = [
  "mime",
  "serde_bytes",
  "serde_core",
+]
+
+[[package]]
+name = "hyperlocal"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "986c5ce3b994526b3cd75578e62554abd09f0899d6206de48b3e96ab34ccc8c7"
+dependencies = [
+ "hex",
+ "http-body-util",
+ "hyper 1.8.1",
+ "hyper-util",
+ "pin-project-lite",
+ "tokio",
+ "tower-service",
 ]
 
 [[package]]
@@ -4278,25 +4300,6 @@ dependencies = [
 
 [[package]]
 name = "ipc-channel"
-version = "0.19.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6fb8251fb7bcd9ccd3725ed8deae9fe7db8e586495c9eb5b0c52e6233e5e75ea"
-dependencies = [
- "bincode",
- "crossbeam-channel",
- "fnv",
- "lazy_static",
- "libc",
- "mio",
- "rand 0.8.5",
- "serde",
- "tempfile",
- "uuid",
- "windows 0.58.0",
-]
-
-[[package]]
-name = "ipc-channel"
 version = "0.20.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f93600b5616c2d075f8af8dbd23c1d69278c5d24e4913d220cbc60b14c95c180"
@@ -4720,7 +4723,7 @@ dependencies = [
  "fonts",
  "gaol",
  "image",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "keyboard-types 0.8.3",
  "layout",
  "layout_api",
@@ -4951,7 +4954,7 @@ name = "media"
 version = "0.0.1"
 dependencies = [
  "euclid",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "log",
  "paint_api",
  "rustc-hash 2.1.1",
@@ -5067,7 +5070,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "69d83b0086dc8ecf3ce9ae2874b2d1290252e2a30720bea58a5c6639b0092873"
 dependencies = [
  "libc",
- "log",
  "wasi 0.11.1+wasi-snapshot-preview1",
  "windows-sys 0.61.2",
 ]
@@ -5216,6 +5218,7 @@ dependencies = [
  "async-compression",
  "async-recursion",
  "async-tungstenite",
+ "aws-lc-rs",
  "base",
  "base64 0.22.1",
  "bytes",
@@ -5238,8 +5241,9 @@ dependencies = [
  "hyper-rustls",
  "hyper-util",
  "hyper_serde",
+ "hyperlocal",
  "imsz",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "itertools 0.14.0",
  "log",
  "malloc_size_of_derive",
@@ -5266,6 +5270,7 @@ dependencies = [
  "time",
  "tokio",
  "tokio-rustls",
+ "tokio-socks",
  "tokio-stream",
  "tokio-util",
  "tower",
@@ -5290,7 +5295,7 @@ dependencies = [
  "http 1.4.0",
  "hyper-util",
  "hyper_serde",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "log",
  "malloc_size_of_derive",
  "mime",
@@ -6083,7 +6088,7 @@ dependencies = [
  "euclid",
  "gleam",
  "image",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "log",
  "media",
  "paint_api",
@@ -6119,7 +6124,7 @@ dependencies = [
  "gleam",
  "glow 0.16.0",
  "image",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "log",
  "malloc_size_of_derive",
  "parking_lot",
@@ -6747,7 +6752,7 @@ version = "0.0.1"
 dependencies = [
  "base",
  "crossbeam-channel",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "log",
  "malloc_size_of_derive",
  "serde",
@@ -7155,7 +7160,7 @@ dependencies = [
  "http-body-util",
  "hyper 1.8.1",
  "hyper-util",
- "ipc-channel 0.19.0",
+ "ipc-channel",
  "keyboard-types 0.7.0",
  "libservo",
  "log",
@@ -7487,7 +7492,7 @@ dependencies = [
  "hyper_serde",
  "image",
  "indexmap",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "itertools 0.14.0",
  "jstraceable_derive",
  "keyboard-types 0.8.3",
@@ -7907,7 +7912,7 @@ name = "servo-media-dummy"
 version = "0.1.0"
 source = "git+https://github.com/servo/media?rev=f384dbc4ff8b5c6f8db2c763306cbe2281d66391#f384dbc4ff8b5c6f8db2c763306cbe2281d66391"
 dependencies = [
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "servo-media",
  "servo-media-audio",
  "servo-media-player",
@@ -7921,7 +7926,7 @@ name = "servo-media-player"
 version = "0.1.0"
 source = "git+https://github.com/servo/media?rev=f384dbc4ff8b5c6f8db2c763306cbe2281d66391#f384dbc4ff8b5c6f8db2c763306cbe2281d66391"
 dependencies = [
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "serde",
  "serde_derive",
  "servo-media-streams",
@@ -8034,7 +8039,7 @@ dependencies = [
  "euclid",
  "http 1.4.0",
  "indexmap",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "keyboard-types 0.8.3",
  "markup5ever 0.38.0",
  "mime",
@@ -9120,6 +9125,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-socks"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d4770b8024672c1101b3f6733eab95b18007dbe0847a8afe341fcf79e06043f"
+dependencies = [
+ "either",
+ "futures-util",
+ "thiserror 1.0.69",
+ "tokio",
+]
+
+[[package]]
 name = "tokio-stream"
 version = "0.1.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -10167,7 +10184,7 @@ dependencies = [
  "base",
  "embedder_traits",
  "euclid",
- "ipc-channel 0.20.2",
+ "ipc-channel",
  "log",
  "profile_traits",
  "serde",
