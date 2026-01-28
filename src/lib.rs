@@ -56,6 +56,10 @@ pub use rigging::embed::{
     EmbedError as BrowserError,
 };
 
+// Re-export transport types (servo feature only)
+#[cfg(feature = "servo")]
+pub use rigging::embed::{Transport, ComposedConfig};
+
 /// Run the browser with the given configuration
 ///
 /// This is a convenience wrapper around Rigging's BrowserBuilder.

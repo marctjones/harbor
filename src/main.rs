@@ -143,13 +143,29 @@ fn main() -> Result<()> {
     }
 
     // Create browser configuration from run config
-    let browser_config = BrowserConfig::new(&run_config.url)
+    let mut browser_config = BrowserConfig::new(&run_config.url)
         .with_title(&run_config.title)
         .with_size(run_config.width, run_config.height)
         .with_resizable(run_config.resizable)
         .with_decorated(run_config.decorated)
         .with_fullscreen(run_config.fullscreen)
         .with_devtools(run_config.devtools);
+
+    // When Servo feature is enabled, restrict to Unix sockets only for security
+    #[cfg(feature = "servo")]
+    {
+        use harbor::{Transport, ComposedConfig};
+        use std::path::PathBuf;
+
+        browser_config = browser_config
+            .unix_only()  // Restrict to Unix sockets only (block TCP, Tor, etc.)
+            .with_connector_config(ComposedConfig {
+                socket_dir: Some(PathBuf::from("/tmp")),
+                tor_socket: None,  // Explicitly disable Tor
+            });
+
+        info!("Browser restricted to Unix sockets only (transport-aware mode)");
+    }
 
     info!("Launching browser window...");
 
