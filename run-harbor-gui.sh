@@ -21,5 +21,7 @@ echo "============================================"
 echo ""
 
 # Run Harbor with Flask example
-export RUST_LOG=info
+# RUST_LOG levels: trace, debug, info, warn, error
+# Set to debug for detailed flow, trace for very verbose
+export RUST_LOG=rigging=debug,harbor=debug,servo=info,webrender=info
 cargo run --features servo -- --example hello-flask
