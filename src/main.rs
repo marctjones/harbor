@@ -154,7 +154,7 @@ fn main() -> Result<()> {
     // When Servo feature is enabled, restrict to Unix sockets only for security
     #[cfg(feature = "servo")]
     {
-        use harbor::{Transport, ComposedConfig};
+        use harbor::ComposedConfig;
         use std::path::PathBuf;
 
         browser_config = browser_config
