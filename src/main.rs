@@ -65,7 +65,8 @@ enum Commands {
 fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    // Initialize logging
+    // Initialize logging (unless Servo feature is enabled - Servo initializes its own logger)
+    #[cfg(not(feature = "servo"))]
     env_logger::Builder::from_env(
         env_logger::Env::default().default_filter_or(&cli.log_level),
     )
