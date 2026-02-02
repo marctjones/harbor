@@ -65,6 +65,10 @@ path = "src/main.rs"
 name = "harbor"
 path = "src/lib.rs"
 
+[[example]]
+name = "test-window"
+path = "examples/test-window.rs"
+
 [features]
 default = ["unix", "servo"]
 unix = []
@@ -99,6 +103,9 @@ clap = { workspace = true }
 
 # Signal handling
 ctrlc = { workspace = true }
+
+# Windowing (for examples)
+winit = "0.30"
 
 # Process management
 [target.'cfg(unix)'.dependencies]
