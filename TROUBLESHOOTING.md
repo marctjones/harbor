@@ -42,14 +42,33 @@ Connection succeeds! But then... nothing. No write, no read.
 
 ## Hypothesis
 
-**The HTTP request is never being sent.**
+~~**The HTTP request is never being sent.**~~ **DISPROVEN!**
 
-Possible causes:
+**NEW FINDING (2026-02-03):**
 
-1. **Servo isn't navigating** - Maybe `http://localhost/` is treated specially
-2. **Async task not polled** - HTTP request future might not be polled
-3. **Request blocked** - HSTS, CSP, or other security blocking localhost
-4. **Client not configured** - FlexibleConnector might not be used for this request
+The networking stack is **100% working**! Debug logging reveals:
+
+```
+[HTTP_FETCH] About to call client.request()
+[UnixConnector] Successfully connected!
+[UnixConnection] Wrote 365 bytes
+[UnixConnection] Request: GET / HTTP/1.1
+[UnixConnection] Read 5820 bytes
+[HTTP_FETCH] Got response! Status: 200 OK
+```
+
+✅ HTTP request sent over Unix socket
+✅ Flask responds with 5820 bytes of HTML
+✅ Servo receives HTTP 200 OK response
+
+**The problem is NOT networking - it's rendering!**
+
+Servo received the HTML but isn't painting it to the window. Possible causes:
+
+1. **Rendering pipeline not triggered** - Compositor not running or not painting
+2. **HTML processing issue** - Content received but not parsed/laid out
+3. **Paint/display issue** - Layout complete but not displayed
+4. **Window compositor issue** - Servo renders but window doesn't update
 
 ## Next Steps to Debug
 

@@ -69,6 +69,10 @@ path = "src/lib.rs"
 name = "test-window"
 path = "examples/test-window.rs"
 
+[[example]]
+name = "test-direct-fetch"
+path = "examples/test_direct_fetch.rs"
+
 [features]
 default = ["unix", "servo"]
 unix = []
@@ -89,6 +93,11 @@ serde = { workspace = true }
 
 # Async runtime
 tokio = { workspace = true }
+
+# HTTP client (for examples)
+hyper = { workspace = true }
+hyper-util = { workspace = true }
+http-body-util = { workspace = true }
 
 # Logging
 log = { workspace = true }
