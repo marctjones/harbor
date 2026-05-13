@@ -2,3 +2,18 @@ target/
 
 # Rigging is a symlink to ../rigging/ (separate git repo)
 rigging/
+
+# Python bytecode (from example backends)
+__pycache__/
+*.pyc
+
+# Local-dev only: broken symlink to a developer's Servo checkout
+/resources
+
+# Ad-hoc rendering/networking debug scripts and fixtures
+/debug-*.sh
+/run-*.sh
+/show-*.sh
+/test-*.sh
+/test.html
+/test-file.toml
