@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.svg" alt="Harbor logo" width="120" height="120">
+</p>
+
 # Harbor ⚓
 
 Local desktop app framework - web frontends connecting to gunicorn/nginx over Unix sockets (Linux/macOS) or named pipes (Windows).
